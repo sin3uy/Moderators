@@ -1,0 +1,391 @@
+<html><head><base href="/">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>مشرفين متجر سيناوي</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary-color: #1a202c;
+  --secondary-color: #2d3748;
+  --accent-color: #4a5568;
+  --text-color: #e2e8f0;
+  --bg-dark: #0a0c10;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  font-family: 'Tajawal', Arial, sans-serif;
+  background-color: var(--bg-dark);
+  color: var(--text-color);
+  line-height: 1.6;
+}
+
+header {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  padding: 1rem;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+h1 {
+  text-align: center;
+  font-size: clamp(1.5rem, 5vw, 2.5rem);
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.container {
+  width: 90%;
+  max-width: 600px;
+  margin: 1rem auto;
+  padding: 1rem;
+}
+
+input, select, button {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  margin: 0.5rem 0;
+  border: 2px solid var(--secondary-color);
+  border-radius: 25px;
+  background-color: var(--primary-color);
+  color: var(--text-color);
+  font-family: 'Tajawal', Arial, sans-serif;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+button {
+  background: linear-gradient(45deg, var(--secondary-color), var(--accent-color));
+  cursor: pointer;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  opacity: 0.9;
+}
+
+.profile-container {
+  position: relative;
+  width: min(200px, 80vw);
+  margin: 2rem auto;
+}
+
+.profile-image {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 4px solid var(--secondary-color);
+  object-fit: cover;
+  box-shadow: 0 0 20px rgba(45, 55, 72, 0.3);
+}
+
+.verification-badge {
+  position: absolute;
+  bottom: 5%;
+  left: 5%;
+  width: 15%;
+  height: 15%;
+  background-color: var(--secondary-color);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+.supervisor-info {
+  background-color: var(--primary-color);
+  padding: 1.5rem;
+  border-radius: 15px;
+  margin-top: 1rem;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.supervisor-info p {
+  margin: 0.5rem 0;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.9);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.modal-content {
+  background: var(--primary-color);
+  padding: 2rem;
+  border-radius: 20px;
+  width: min(90%, 500px);
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 5px 30px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.close-modal {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--accent-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 0;
+}
+
+.withdraw-modal-profile {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.withdraw-modal-profile img {
+  width: min(120px, 40vw);
+  height: min(120px, 40vw);
+  border-radius: 50%;
+  border: 3px solid var(--secondary-color);
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 480px) {
+  .container {
+    width: 95%;
+    padding: 0.5rem;
+  }
+  
+  input, select, button {
+    padding: 0.7rem;
+    font-size: 0.9rem;
+  }
+  
+  .modal-content {
+    padding: 1.5rem;
+  }
+  
+  .supervisor-info {
+    padding: 1rem;
+  }
+}
+</style>
+</head>
+<body dir="rtl">
+
+<header>
+  <h1>مشرفين متجر سيناوي</h1>
+</header>
+
+<main>
+  <div class="container">
+    <input type="text" id="supervisorId" placeholder="ادخل ID المشرف الخاص بك">
+    <button onclick="searchSupervisor()">بحث</button>
+
+    <div id="result"></div>
+    <div id="withdrawForm" style="display: none;"></div>
+  </div>
+</main>
+
+<div id="withdrawModal" class="modal-overlay">
+  <div class="modal-content">
+    <button class="close-modal" onclick="closeWithdrawModal()">×</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<script>
+const supervisors = {
+  "542819": {
+    name: "كريم الداودي",
+    image: "https://i.postimg.cc/4yGFRGBq/IMG-20241130-WA0055.jpg",
+    rank: 1,
+    governorate: "دمياط",
+    balance: 5,
+    shdat: 0
+  }
+};
+
+function searchSupervisor() {
+  const id = document.getElementById("supervisorId").value;
+  const resultDiv = document.getElementById("result");
+  
+  if (supervisors[id]) {
+    const supervisor = supervisors[id];
+    resultDiv.innerHTML = `
+      <div class="supervisor-info">
+        <div class="profile-container">
+          <img src="${supervisor.image}" class="profile-image">
+          <div class="verification-badge">
+            <svg viewBox="0 0 24 24">
+              <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+            </svg>
+          </div>
+        </div>
+        <p>الاسم: ${supervisor.name}</p>
+        <p>الرتبة: ${supervisor.rank}</p>
+        <p>المحافظة: ${supervisor.governorate}</p>
+        <p>الرصيد: ${supervisor.balance} جنيه</p>
+        <p>عدد الشدات: ${supervisor.shdat}</p>
+        <button onclick="showWithdrawModal('${id}')">هل تريد سحب فلوس او شدات؟</button>
+      </div>
+    `;
+  } else {
+    resultDiv.innerHTML = '<div class="supervisor-info">لم يتم العثور على مشرف بهذا الID</div>';
+  }
+}
+
+function showWithdrawModal(id) {
+  const supervisor = supervisors[id];
+  const modal = document.getElementById('withdrawModal');
+  const modalContent = document.getElementById('modalContent');
+  
+  if (supervisor.balance < 5) {
+    alert("عذراً، رصيدك أقل من 5 جنيه. لا يمكنك السحب.");
+    return;
+  }
+
+  modalContent.innerHTML = `
+    <div class="withdraw-modal-profile">
+      <img src="${supervisor.image}" alt="${supervisor.name}">
+      <h2>${supervisor.name}</h2>
+      <p>الرصيد الحالي: ${supervisor.balance} جنيه</p>
+    </div>
+    <select id="withdrawType" onchange="handleWithdrawTypeChange()">
+      <option value="">اختر نوع السحب</option>
+      <option value="money">فلوس</option>
+      <option value="shdat">شدات</option>
+    </select>
+    <div id="withdrawDetails"></div>
+  `;
+  
+  modal.style.display = 'flex';
+}
+
+function closeWithdrawModal() {
+  document.getElementById('withdrawModal').style.display = 'none';
+}
+
+function handleWithdrawTypeChange() {
+  const withdrawType = document.getElementById("withdrawType").value;
+  const withdrawDetails = document.getElementById("withdrawDetails");
+  const id = document.getElementById("supervisorId").value;
+  const supervisor = supervisors[id];
+  
+  if (withdrawType === "money") {
+    withdrawDetails.innerHTML = `
+      <input type="number" id="amount" min="5" max="${supervisor.balance}" placeholder="المبلغ (الحد الأدنى 5 جنيه)">
+      <input type="text" id="phone" placeholder="رقم المحفظة (فودافون/اتصالات/اورانج)">
+      <input type="text" id="withdrawId" placeholder="الID الخاص بك">
+      <button onclick="requestWithdraw('money')">طلب سحب</button>
+    `;
+  } else if (withdrawType === "shdat") {
+    withdrawDetails.innerHTML = `
+      <p>تواصل مع سيناوي على WhatsApp للسحب الشدات: <a href="https://wa.me/+201009123031" target="_blank" style="color: var(--secondary-color);">اضغط هنا</a></p>
+    `;
+  }
+}
+
+async function requestWithdraw(type) {
+  if (type === 'money') {
+    const id = document.getElementById("supervisorId").value;
+    const supervisor = supervisors[id];
+    const amount = parseInt(document.getElementById("amount").value);
+    const phone = document.getElementById("phone").value;
+    const withdrawId = document.getElementById("withdrawId").value;
+
+    if (amount < 5) {
+      alert("عذراً، الحد الأدنى للسحب هو 5 جنيه");
+      return;
+    }
+
+    if (amount > supervisor.balance) {
+      alert("عذراً، رصيدك غير كافي لهذا المبلغ");
+      return;
+    }
+
+    const message = `
+طلب سحب جديد:
+الاسم: ${supervisor.name}
+الصورة: ${supervisor.image}
+الرتبة: ${supervisor.rank}
+المحافظة: ${supervisor.governorate}
+الرصيد الحالي: ${supervisor.balance}
+المبلغ المطلوب: ${amount}
+الرصيد المتبقي: 0
+رقم المحفظة: ${phone}
+ID: ${withdrawId}
+    `;
+
+    try {
+      const response = await fetch(`https://api.telegram.org/bot7621464671:AAHybyAz0wnAaZq2AcC2N2_rmGMrHh1sVI8/sendMessage`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          chat_id: "7785980587",
+          text: message
+        })
+      });
+      
+      if (response.ok) {
+        // Set balance to 0 after withdrawal
+        supervisor.balance = 0;
+        // Store the updated balance in localStorage
+        localStorage.setItem('supervisors', JSON.stringify(supervisors));
+        alert("تم إرسال طلب السحب بنجاح");
+        closeWithdrawModal();
+        searchSupervisor(); // Refresh the display
+      } else {
+        alert("حدث خطأ في إرسال الطلب");
+      }
+    } catch (error) {
+      alert("حدث خطأ في إرسال الطلب");
+    }
+  }
+}
+
+// Load supervisors data from localStorage on page load
+window.onload = function() {
+  const storedSupervisors = localStorage.getItem('supervisors');
+  if (storedSupervisors) {
+    Object.assign(supervisors, JSON.parse(storedSupervisors));
+  }
+};
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+  const modal = document.getElementById('withdrawModal');
+  if (event.target === modal) {
+    closeWithdrawModal();
+  }
+}
+</script>
+
+</body>
+</html>
